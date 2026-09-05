@@ -1,0 +1,83 @@
+<main class="container">
+  <p class="loading" *ngIf="loading">Starting a new game...</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <ng-container *ngIf="game as g">
+  <header>
+    <h1>Tic Tac Toe</h1>
+     
+  </header>
+
+  <section class="toolbar">
+    <label>
+      Game mode
+      <select [(ngModel)]="selectedMode" (change)="changeMode()">
+        <option value="TwoPlayer">Two Player</option>
+        <option value="Computer">Play Against Computer</option>
+      </select>
+    </label>
+
+    <div class="actions">
+      <button (click)="resetGame()">Reset Game</button>
+      <button
+        (click)="undo()"
+        [disabled]="g.moveHistory.length === 0 || g.status !== 'InProgress'">
+        Undo Last Move
+      </button>
+      <button class="secondary" (click)="resetScoreboard()">Reset Scoreboard</button>
+    </div>
+  </section>
+
+  <section class="status" [class.finished]="g.status !== 'InProgress'">
+    {{ statusMessage() }}
+  </section>
+
+  <section class="content">
+    <div class="board" aria-label="Tic Tac Toe board">
+      <button
+        *ngFor="let cell of g.board; let i = index"
+        class="cell"
+        [class.x]="cell === 'X'"
+        [class.o]="cell === 'O'"
+        [class.winning]="g.winningCells.includes(i)"
+        [disabled]="!!cell || g.status !== 'InProgress'"
+        (click)="play(i)"
+        [attr.aria-label]="cellLabel(i)">
+        {{ cell }}
+      </button>
+    </div>
+
+    <aside>
+      <div class="card">
+        <h2>Scoreboard</h2>
+        <div class="scores">
+          <span><b>X</b> {{ g.scoreboard.xWins }}</span>
+          <span><b>O</b> {{ g.scoreboard.oWins }}</span>
+          <span><b>Draws</b> {{ g.scoreboard.draws }}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Move History</h2>
+        <div *ngIf="g.moveHistory.length === 0" class="muted">No moves yet.</div>
+        <table *ngIf="g.moveHistory.length > 0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Player</th>
+              <th>Position</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let move of g.moveHistory">
+              <td>{{ move.moveNumber }}</td>
+              <td>{{ move.player }}</td>
+              <td>Row {{ move.row + 1 }}, Column {{ move.column + 1 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+  </section>
+  </ng-container>
+</main>
