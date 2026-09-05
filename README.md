@@ -1,6 +1,6 @@
 # Tic Tac Toe – Angular + .NET 8
 
-Technical assessment solution for the Software Development Manager role.
+Technical assessment solution .
 
 ## Project Overview
 
