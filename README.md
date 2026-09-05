@@ -189,7 +189,6 @@ being included in the final solution.
 
 - ChatGPT – used for brainstorming, implementation alternatives, debugging assistance,
   test-case suggestions, and code review support.
-- GitHub Copilot – used for code completion and development productivity where appropriate.
 
 ### Example AI-Assisted Workflow
 
