@@ -180,27 +180,69 @@ Tests cover:
 
 ## AI-Assisted Development
 
-AI tools used during development, but all generated code reviewed and tested by the me.
+  
+AI-assisted development tools were used during the implementation of this assessment. 
+All AI-generated suggestions and code were reviewed, adapted, and tested by me before 
+being included in the final solution.
 
-Example workflow:
+### AI Tools Used
 
-- Convert the assessment requirements into a feature checklist.
-- Ask AI for implementation alternatives.
-- Review generated code against the requirements.
-- Manually decide architecture, API boundaries, validation and undo semantics.
-- Write/review unit tests for edge cases.
-- Run the application and tests locally.
-- Refactor generated code where appropriate.
+- ChatGPT – used for brainstorming, implementation alternatives, debugging assistance,
+  test-case suggestions, and code review support.
+- GitHub Copilot – used for code completion and development productivity where appropriate.
 
-The important engineering decisions in this solution are:
+### Example AI-Assisted Workflow
 
-- Backend is the source of truth.
-- Domain/game logic is separated from controllers.
-- Computer strategy is deterministic and independently testable.
-- Undo behavior is mode-specific.
-- Scoreboard is updated once per completed game.
-- Completed games cannot be undone.
-- CI validates backend and frontend builds.
+1. Converted the assessment requirements into a feature and acceptance checklist.
+2. Used AI to explore implementation alternatives and identify potential edge cases.
+3. Reviewed AI-generated suggestions against the assessment requirements and API contract.
+4. Manually decided the architecture, API boundaries, validation rules, state ownership,
+   and undo behavior.
+5. Reviewed and adapted generated code to fit the project structure and coding standards.
+6. Added and reviewed unit tests for valid moves, invalid moves, turn switching, win/draw
+   detection, undo, reset, scoreboard behavior, and computer moves.
+7. Ran the application and tests locally and investigated failures manually.
+8. Refactored generated code where necessary rather than accepting AI output unchanged.
+
+### What Was Generated vs. What Was Reviewed Manually
+
+AI assistance was primarily used to accelerate development and explore implementation
+options. The final implementation decisions remained my responsibility.
+
+Examples of areas reviewed and/or modified manually:
+
+- API contract and request/response models
+- Backend game-state ownership
+- Move validation and state transitions
+- Undo semantics for Two Player and Computer modes
+- Computer move-selection strategy
+- Scoreboard update behavior
+- Error handling
+- Unit-test coverage and edge cases
+- Angular-to-.NET API integration
+- Project structure and maintainability
+
+### Engineering Decisions
+
+- **Backend is the source of truth** for game state, move validation, game status,
+  move history, and scoreboard.
+- **Domain/game logic is separated from controllers** so that business rules remain
+  independently testable.
+- **Computer strategy is deterministic and independently testable**.
+- **Undo behavior is mode-specific**:
+  - Two Player Mode: undo the most recent move.
+  - Computer Mode: undo the computer move and the preceding human move together.
+- **Completed games cannot be undone**. This keeps the completed result and scoreboard
+  consistent and avoids reversing a finalized game.
+- **Scoreboard is updated once per completed game** and is preserved when a game is reset.
+- **In-memory storage** is used because persistence was not required for the assessment.
+- **CI validates backend tests/build and frontend build** to catch integration and
+  compilation issues before changes are merged.
+
+### AI Usage Principle
+
+AI was used as a development assistant, not as a substitute for engineering judgment.
+The final code, design decisions, tests, and trade-offs were reviewed and validated by me.
 
 ## Design Trade-offs
 
