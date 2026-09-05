@@ -1,4 +1,4 @@
-# Tic Tac Toe – Angular + .NET 8
+# Tic Tac Toe – Angular + .NET 8 
 
 Technical assessment solution .
 
