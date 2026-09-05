@@ -202,6 +202,107 @@ The important engineering decisions in this solution are:
 - Completed games cannot be undone.
 - CI validates backend and frontend builds.
 
+## Design Trade-offs
+
+### 1. In-Memory Storage vs Database
+
+**Decision:** Use in-memory storage for this assessment.
+
+**Why:**
+- The assessment explicitly permits in-memory storage.
+- The application is intended to run locally.
+- It keeps the implementation simple and easy for the panel to run and review.
+
+**Trade-off:**
+- Game state is lost when the backend restarts.
+- It does not support reliable state sharing across multiple API instances.
+
+**Production improvement:**
+Use Redis or a persistent database depending on scalability, durability and consistency requirements.
+
+### 2. Backend State vs Frontend State
+
+**Decision:** The backend is the source of truth.
+
+**Why:**
+- Centralizes game rules and move validation.
+- Prevents the frontend from independently deciding game state.
+- Makes state transitions easier to test consistently.
+
+**Trade-off:**
+- Game actions require REST API calls.
+- There is additional network communication compared with keeping all game logic in the browser.
+
+**Production benefit:**
+Multiple clients can rely on the same authoritative game rules and state.
+
+### 3. Undo After Game Completion
+
+**Decision:** Disable Undo after a game is Won or Draw.
+
+**Why:**
+- Keeps the completed result final.
+- Prevents the scoreboard from needing to be reversed.
+- Reduces state-management complexity.
+
+**Alternative:**
+Allow Undo after completion and adjust the scoreboard when the result is reversed.
+
+**Why it was not selected:**
+The additional transactional/state complexity is unnecessary for this assessment.
+
+### 4. Simple Computer Strategy vs Minimax
+
+**Decision:** Implement the required deterministic priority-based strategy.
+
+Priority:
+1. Win if possible
+2. Block X if X can win next
+3. Take center
+4. Take a corner
+5. Take any available cell
+
+**Why:**
+- It directly satisfies the assessment requirement.
+- It is deterministic and easy to understand.
+- It is straightforward to unit test.
+
+**Trade-off:**
+The computer is not an optimal Tic Tac Toe player in every possible position.
+
+**Future improvement:**
+Use a minimax-based strategy if a stronger computer opponent is required.
+
+### 5. Per-Game Synchronization vs Global Lock
+
+**Decision:** Use a synchronization object per game.
+
+**Why:**
+- Concurrent operations on the same game are serialized.
+- Unrelated games do not have to wait for each other.
+- It provides atomic validation and state changes within a single API instance.
+
+**Trade-off:**
+An in-process lock does not coordinate state between multiple API instances.
+
+**Production improvement:**
+Use database optimistic concurrency/versioning, Redis, or distributed locking when horizontally scaling the API.
+
+### 6. Layered Game Logic vs Controller Logic
+
+**Decision:** Keep game rules in the service/domain layer rather than controllers.
+
+**Why:**
+- Controllers remain focused on HTTP concerns.
+- Core game behavior can be unit tested without HTTP.
+- Business rules are easier to maintain and extend.
+
+**Trade-off:**
+There are more classes and abstractions than a minimal controller-only implementation.
+
+**Benefit:**
+The structure is easier to evolve and is more appropriate for a maintainable application.
+
 ## Assumptions
 
 - In-memory storage is sufficient for this local assessment.
