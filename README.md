@@ -180,7 +180,7 @@ Tests cover:
 
 ## AI-Assisted Development
 
-AI tools may be used during development, but all generated code should be reviewed and tested by the candidate.
+AI tools used during development, but all generated code reviewed and tested by the me.
 
 Example workflow:
 
@@ -288,22 +288,7 @@ An in-process lock does not coordinate state between multiple API instances.
 **Production improvement:**
 Use database optimistic concurrency/versioning, Redis, or distributed locking when horizontally scaling the API.
 
-### 6. Layered Game Logic vs Controller Logic
-
-**Decision:** Keep game rules in the service/domain layer rather than controllers.
-
-**Why:**
-- Controllers remain focused on HTTP concerns.
-- Core game behavior can be unit tested without HTTP.
-- Business rules are easier to maintain and extend.
-
-**Trade-off:**
-There are more classes and abstractions than a minimal controller-only implementation.
-
-**Benefit:**
-The structure is easier to evolve and is more appropriate for a maintainable application.
-
-## Assumptions
+ ## Assumptions
 
 - In-memory storage is sufficient for this local assessment.
 - One game session is represented by one game ID.
